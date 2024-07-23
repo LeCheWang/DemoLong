@@ -2,7 +2,8 @@ const categoryModel = require('../models/category.model');
 
 module.exports = {
   createCategory: async (req, res) => {
-    const body = req.body;
+    const body = req.body; 
+    body.img = '/images/' + req.file.filename;
     const newCategory = await categoryModel.create(body);
     return res.status(201).json(newCategory);
   },

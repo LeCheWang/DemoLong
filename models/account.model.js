@@ -12,6 +12,7 @@ const accountSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    email: String,
     fullName: String,
     phone: String,
     role: {
@@ -53,10 +54,10 @@ accountSchema.pre('findByIdAndUpdate', function (next) {
   next();
 });
 
-accountSchema.set("toJSON", {
-  transform: function(doc, ret, options) {
+accountSchema.set('toJSON', {
+  transform: function (doc, ret, options) {
     delete ret.password;
-  }
-})
+  },
+});
 
 module.exports = mongoose.model('account', accountSchema);
