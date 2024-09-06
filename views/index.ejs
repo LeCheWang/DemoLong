@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello Chat App</h1>
+    <div class="form_join">
+        <input type="text" id="name" placeholder="your name">
+        <input type="text" id="room" placeholder="room">
+        <button id="btn_join">Join</button>
+    </div>
+    <ul id="ul_message">
+        <li>hello</li>
+        <li>hi</li>
+    </ul>
+    <div class="form_send">
+        <input type="text" id="ip_message" placeholder="type message">
+        <button id="btn_send">Gửi</button>
+    </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io.connect("localhost:5000");
+    let my_name = '';
+    const ip_name = document.getElementById("name");
+    const ip_room = document.getElementById("room");
+    const btn_join = document.getElementById("btn_join");
+    const ul_message = document.getElementById("ul_message");
+    const ip_message = document.getElementById("ip_message");
+    const btn_send = document.getElementById("btn_send");
+
+    btn_join.addEventListener("click", () => {
+        my_name = ip_name.value;
+        const room = ip_room.value;
+        socket.emit("join", room);
+    })
+
+    function sendMessage(){
+        const message = ip_message.value;
+        const obj = {
+            name: my_name,
+            message
+        }
+
+        socket.emit("message", obj);
+        ip_message.value = "";
+        ip_message.focus();
+    }
+
+    btn_send.addEventListener("click", sendMessage);
+
+    socket.on("thread", (data)=> {
+        const li = document.createElement("li");
+        li.innerHTML = `${data.name}: ${data.message}`;
+        ul_message.appendChild(li);
+    })
+</script>
+</html>
